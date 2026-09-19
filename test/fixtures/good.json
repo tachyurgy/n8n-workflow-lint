@@ -1,0 +1,22 @@
+{
+  "name": "Good workflow",
+  "settings": { "executionOrder": "v1", "errorWorkflow": "abc123", "executionTimeout": 300, "saveDataSuccessExecution": "all" },
+  "nodes": [
+    { "name": "Webhook", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0,0], "parameters": { "path": "x", "authentication": "headerAuth" } },
+    { "name": "Fetch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [200,0], "retryOnFail": true, "maxTries": 3, "waitBetweenTries": 2000, "onError": "continueErrorOutput",
+      "parameters": { "url": "https://api.example.com", "options": { "timeout": 15000 } } },
+    { "name": "Fail loudly", "type": "n8n-nodes-base.stopAndError", "typeVersion": 1, "position": [400,200], "parameters": { "errorMessage": "fetch failed" } },
+    { "name": "Any rows?", "type": "n8n-nodes-base.if", "typeVersion": 2.2, "position": [400,0], "parameters": { "conditions": { "conditions": [ { "leftValue": "={{ $items().length }}", "rightValue": 0, "operator": { "type": "number", "operation": "gt" } } ] } } },
+    { "name": "Append", "type": "n8n-nodes-base.googleSheets", "typeVersion": 4.5, "position": [600,0], "parameters": { "operation": "append" } },
+    { "name": "Receipt", "type": "n8n-nodes-base.if", "typeVersion": 2.2, "position": [800,0], "parameters": { "conditions": { "conditions": [ { "leftValue": "={{ $json.updatedRange }}", "rightValue": "", "operator": { "type": "string", "operation": "notEmpty" } } ] } } },
+    { "name": "Done", "type": "n8n-nodes-base.noOp", "typeVersion": 1, "position": [1000,0], "parameters": {} },
+    { "name": "Nothing written", "type": "n8n-nodes-base.stopAndError", "typeVersion": 1, "position": [1000,200], "parameters": { "errorMessage": "0 rows written" } }
+  ],
+  "connections": {
+    "Webhook": { "main": [ [ { "node": "Fetch", "type": "main", "index": 0 } ] ] },
+    "Fetch": { "main": [ [ { "node": "Any rows?", "type": "main", "index": 0 } ], [ { "node": "Fail loudly", "type": "main", "index": 0 } ] ] },
+    "Any rows?": { "main": [ [ { "node": "Append", "type": "main", "index": 0 } ], [ { "node": "Nothing written", "type": "main", "index": 0 } ] ] },
+    "Append": { "main": [ [ { "node": "Receipt", "type": "main", "index": 0 } ] ] },
+    "Receipt": { "main": [ [ { "node": "Done", "type": "main", "index": 0 } ], [ { "node": "Nothing written", "type": "main", "index": 0 } ] ] }
+  }
+}

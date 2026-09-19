@@ -1,0 +1,16 @@
+{
+  "name": "n8n-workflow-lint",
+  "version": "0.1.0",
+  "description": "Static production-readiness checks for n8n workflow JSON: silent-failure traps, missing retries and timeouts, swallowed errors, dead-end branches, leaked secrets, unauthenticated webhooks.",
+  "type": "module",
+  "bin": { "n8n-workflow-lint": "bin/n8n-workflow-lint.js" },
+  "main": "src/index.js",
+  "exports": { ".": "./src/index.js" },
+  "files": ["bin", "src", "README.md", "LICENSE"],
+  "scripts": { "test": "node --test test/*.test.js" },
+  "engines": { "node": ">=18" },
+  "keywords": ["n8n", "lint", "workflow", "automation", "reliability", "static-analysis"],
+  "author": "Levelbrook Consulting <levelbrookteam@gmail.com>",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/tachyurgy/n8n-workflow-lint" }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "Bad workflow",
+  "settings": { "executionOrder": "v0", "saveDataSuccessExecution": "none" },
+  "nodes": [
+    { "name": "Webhook", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [0,0], "parameters": { "path": "x" } },
+    { "name": "Fetch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [200,0], "onError": "continueRegularOutput",
+      "parameters": { "url": "https://api.example.com", "options": {}, "headerParameters": { "parameters": [ { "name": "Authorization", "value": "Bearer sk-abcdefghijklmnopqrstuvwxyz0123456789" } ] } } },
+    { "name": "Is ok?", "type": "n8n-nodes-base.if", "typeVersion": 2.2, "position": [400,0], "parameters": { "conditions": { "conditions": [ { "leftValue": "={{ $json.status }}", "rightValue": "ok", "operator": { "type": "string", "operation": "equals" } } ] } } },
+    { "name": "Agent", "type": "@n8n/n8n-nodes-langchain.agent", "typeVersion": 1.7, "position": [600,0], "parameters": {} },
+    { "name": "Tool", "type": "n8n-nodes-base.httpRequestTool", "typeVersion": 4.2, "position": [600,200], "parameters": { "url": "https://x" } },
+    { "name": "Append", "type": "n8n-nodes-base.googleSheets", "typeVersion": 4.5, "position": [800,0], "parameters": { "operation": "append" } },
+    { "name": "Clean", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [0,300], "parameters": { "jsCode": "try { JSON.parse($json.x) } catch (e) { return [] }" } },
+    { "name": "Old", "type": "n8n-nodes-base.set", "typeVersion": 3.4, "position": [0,500], "disabled": true, "parameters": {} },
+    { "name": "Note", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1, "position": [0,700], "parameters": { "content": "hi" } }
+  ],
+  "connections": {
+    "Webhook": { "main": [ [ { "node": "Fetch", "type": "main", "index": 0 } ] ] },
+    "Fetch": { "main": [ [ { "node": "Is ok?", "type": "main", "index": 0 } ] ] },
+    "Is ok?": { "main": [ [ { "node": "Agent", "type": "main", "index": 0 } ], [] ] },
+    "Tool": { "ai_tool": [ [ { "node": "Agent", "type": "ai_tool", "index": 0 } ] ] },
+    "Agent": { "main": [ [ { "node": "Append", "type": "main", "index": 0 } ] ] }
+  }
+}
