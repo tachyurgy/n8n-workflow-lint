@@ -144,6 +144,6 @@ The goal is that every finding is something a senior engineer would actually fla
 
 ## Author
 
-Built by [Levelbrook Consulting](https://automation.levelbrook.com/engineering/), a senior
+Built by [Levelbrook Consulting](https://ai.levelbrook.com/work/silent-failures/), a senior
 software engineer who builds n8n and Make automations that hold up in production, and the custom
 code around them when the node palette runs out. MIT licensed.
