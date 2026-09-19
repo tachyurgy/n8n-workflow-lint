@@ -9,8 +9,10 @@ unauthenticated webhooks.
 No install, no signup, nothing leaves your machine:
 
 ```
-npx n8n-workflow-lint my-workflow.json
+npx github:tachyurgy/n8n-workflow-lint my-workflow.json
 ```
+
+(Zero dependencies, Node 18+. An npm package name is coming; the GitHub form works today.)
 
 ```
 my-workflow.json  "Inbound lead sync"  score 61/100 (C)  2 error, 4 warn, 1 info
@@ -108,7 +110,7 @@ If you version your workflows in git (you should; there is a template for backin
 GitHub), gate merges on them:
 
 ```yaml
-- run: npx n8n-workflow-lint workflows/ --fail-on warn --min-score 75
+- run: npx github:tachyurgy/n8n-workflow-lint workflows/ --fail-on warn --min-score 75
 ```
 
 ### As a library
