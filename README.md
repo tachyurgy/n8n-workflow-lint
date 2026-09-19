@@ -123,9 +123,10 @@ const { score, grade, findings } = lint(JSON.parse(fs.readFileSync('wf.json', 'u
 ## What it does not do
 
 It is static. It reads the JSON you export and nothing else, so it cannot tell you a workflow
-*is* failing silently; it tells you where it *can*. Pair it with an execution-side check (a
-scheduled workflow that pulls `/api/v1/executions` and alerts on success runs with zero output,
-or a heartbeat) for the runtime half. Workflow-level rules (`no-error-workflow`,
+*is* failing silently; it tells you where it *can*. Pair it with an execution-side check for the runtime half: the
+[Production Hardening Kit](https://github.com/tachyurgy/n8n-automation-portfolio/tree/main/04-production-hardening-kit)
+is four importable workflows (deduped error router, outcome assertion sub-workflow, hourly
+execution auditor, worked example) that do exactly that. Workflow-level rules (`no-error-workflow`,
 `no-execution-timeout`, …) are skipped when an export has no `settings` block, which is the
 case for most template downloads.
 
